@@ -1,4 +1,4 @@
-package com.darrenlai.bookclub.controllers;
+package com.darrenlai.events.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import com.darrenlai.bookclub.models.LoginUser;
-import com.darrenlai.bookclub.models.User;
-import com.darrenlai.bookclub.services.UserService;
+import com.darrenlai.events.models.LoginUser;
+import com.darrenlai.events.models.User;
+import com.darrenlai.events.services.UserService;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -24,7 +24,7 @@ public class UserController {
     public String index(Model model) {
         model.addAttribute("newUser", new User());
         model.addAttribute("newLogin", new LoginUser());
-        return "index.jsp";
+        return "/events/index.jsp";
     }
 	
 	@PostMapping("/register")
@@ -33,11 +33,11 @@ public class UserController {
     	User user = userService.register(newUser, result);
         if(result.hasErrors()) {
             model.addAttribute("newLogin", new LoginUser());
-            return "index.jsp";
+            return "/events/index.jsp";
         }
         session.setAttribute("userId", user.getId());
     
-        return "redirect:/books";
+        return "redirect:/events";
     }
     
     @PostMapping("/login")
@@ -54,7 +54,7 @@ public class UserController {
         session.setAttribute("userId", user.getId());
         
     
-        return "redirect:/books";
+        return "redirect:/events";
     }
     
     

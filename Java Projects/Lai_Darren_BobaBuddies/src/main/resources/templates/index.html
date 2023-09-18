@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0" />
+  <title>Boba Buddies</title>
+  <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+  <style>
+  	h1, p {
+  		text-align:center;
+  	}
+  	a {
+  		margin:auto;
+  	}
+  	#registerForm, #loginForm {
+  		border:solid 2px darkgray;
+  		border-radius: 5px;
+  		padding:5%;
+  	}
+  	.formDiv, .formError {
+  		width:80%;
+  		margin:auto;
+  		display:flex;
+  		justify-content: space-between;
+  	}
+  	.formError {
+  		color:#F40009;
+  		margin-bottom:10px;
+  	}
+  	.submit, .centerDiv {
+  		display: flex;
+  		justify-content: center;
+  		margin-bottom:15px;
+  	}
+  </style>
+</head>
+
+<body>
+
+	<h1>Boba Buddies</h1>
+	<p>Meet and network with other boba enthusiasts!</p>
+	<p class="centerDiv">
+		<button th:onclick="showRegister()">Register</button> or <button th:onclick="showLogin()">Login</button>
+	</p>
+	<a class="centerDiv" href="/events">or check out upcoming events</a>
+	<div id="registerForm">
+		<form th:action="@{/register}" th:object="${newUser}" method="post">
+		    <div class="formDiv">
+		    	<label for="firstName" style="font-size:14px">First Name</label>
+				<input type="text" th:field="*{firstName}" id="firstName" placeholder="First Name">
+			</div>
+		    <div class="formError" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
+		    <div class="formDiv">
+			    <label for="lastName">Last Name</label>
+			    <input type="text" th:field="*{lastName}" id="lastName" placeholder="Last Name">
+			</div>
+		    <div class="formError" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+		    <div class="formDiv">
+			    <label for="email">Email</label>
+			    <input type="text" th:field="*{email}" id="email" placeholder="Email">
+			</div>
+		    <div class="formError" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+		    <div class="formDiv">
+				<label for="password">Password</label>
+				<input type="password" th:field="*{password}" id="password" placeholder="Password">
+			</div>
+			<div class="formError" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+		    <div class="formDiv">
+				<label for="confirm"> Confirm Password</label>
+				<input type="password" th:field="*{confirm}" id="confirm" placeholder="Confirm Password">
+			</div>
+			<div class="formError" th:if="${#fields.hasErrors('confirm')}" th:errors="*{confirm}"></div>
+		    <div class="submit">
+		    	<input type="submit" value="Register">
+		    </div>
+		</form>
+    </div>
+    <div id="loginForm">
+		<form th:action="@{/login}" th:object="${newLogin}" method="post">
+		    <div>
+		    	<div>
+			        <label for="email">Email</label>
+			        <input type="text" th:field="*{email}" id="email" placeholder="Email">
+			    </div>
+		        <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+		    </div>
+		    <div>
+		    	<div>
+			        <label for="password">Password</label>
+			        <input type="password" th:field="*{password}" id="password" placeholder="Password">
+			    </div>
+		        <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+		    </div>
+		    <div>
+		    	<input type="submit" value="Login">
+		    </div>
+		</form>
+    </div>
+	
+</body>
+<script>
+	const loginForm = document.querySelector("#loginForm");
+	const registerForm = document.querySelector("#registerForm");
+	
+	loginForm.style.display = "none";
+	registerForm.style.display = "none";
+	
+	function showLogin() {
+		loginForm.style.display = "block";
+		registerForm.style.display = "none";
+	}
+	
+	function showRegister() {
+		loginForm.style.display = "none";
+		registerForm.style.display = "block";
+	}
+</script>
+</html>

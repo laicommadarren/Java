@@ -1,5 +1,4 @@
-package com.darrenlai.bookclub.models;
-
+package com.darrenlai.bobabuddies.models;
 import java.util.Date;
 import java.util.List;
 
@@ -11,6 +10,9 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
@@ -18,6 +20,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
     
 @Entity
@@ -28,21 +31,26 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @NotEmpty(message="Username is required!")
-    @Size(min=3, max=30, message="Username must be between 3 and 30 characters")
-    private String username;
+    @NotEmpty(message="First name is required!")
+    @Size(max=24, message="First name must contain 24 or fewer characters")
+    @Pattern(regexp="^[A-Za-z]*$", message = "First name can only contain letters")
+    private String firstName;
+    
+    @NotEmpty(message="Last name is required!")
+    @Size(max=24, message="Last Name name must contain 24 or fewer characters")
+    @Pattern(regexp="^[A-Za-z]*$", message = "Last name can only contain letters")
+    private String lastName;
     
     @NotEmpty(message="Email is required!")
     @Email(message="Please enter a valid email!")
     private String email;
     
     @NotEmpty(message="Password is required!")
-    @Size(min=8, max=128, message="Password must be between 8 and 128 characters")
+    @Size(min=8, message="Password must be at least 8 characters")
     private String password;
     
     @Transient
-    @NotEmpty(message="Confirm Password is required!")
-    @Size(min=8, max=128, message="Confirm Password must be between 8 and 128 characters")
+    @NotEmpty(message="Please confirm password")
     private String confirm;
     
     @Column(updatable=false)
@@ -53,17 +61,19 @@ public class User {
 	private Date updatedAt;
 	
 	@OneToMany(mappedBy="user", fetch = FetchType.LAZY)
-	private List<Book> books;
+	private List<Event> hostEvents;
+	
+	@ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "events_users", 
+        joinColumns = @JoinColumn(name = "user_id"), 
+        inverseJoinColumns = @JoinColumn(name = "event_id")
+    )
+    private List<Event> events;
 	
   
     public User() {}
-
-	public User(String username, String email, String password) {
-		this.username = username;
-		this.email = email;
-		this.password = password;
-	}
-
+    
 	public Long getId() {
 		return id;
 	}
@@ -72,12 +82,20 @@ public class User {
 		this.id = id;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 	public String getEmail() {
@@ -103,14 +121,21 @@ public class User {
 	public void setConfirm(String confirm) {
 		this.confirm = confirm;
 	}
-	
-	
-	public List<Book> getBooks() {
-		return books;
+
+	public List<Event> getHostEvents() {
+		return hostEvents;
 	}
 
-	public void setBooks(List<Book> books) {
-		this.books = books;
+	public void setHostEvents(List<Event> hostEvents) {
+		this.hostEvents = hostEvents;
+	}
+
+	public List<Event> getEvents() {
+		return events;
+	}
+
+	public void setEvents(List<Event> events) {
+		this.events = events;
 	}
 
 	@PrePersist
